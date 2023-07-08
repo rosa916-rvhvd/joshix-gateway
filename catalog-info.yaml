@@ -1,0 +1,69 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: joshix-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: joshix-poi-gateway-app-dev
+    backstage.io/kubernetes-id: joshix-poi-gateway-app-dev
+    backstage.io/kubernetes-namespace: joshix
+    janus-idp.io/tekton-enabled : 'true'
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=joshix-poi-gateway-app-dev'
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: rosa916-rvhvd/joshix-gateway
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.rosa916.9nln.p1.openshiftapps.com/dev-pipelines/ns/joshix/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.rosa916.9nln.p1.openshiftapps.com/k8s/ns/joshix/deployments/joshix-poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.rosa916.9nln.p1.openshiftapps.com/#https://github.com/rosa916-rvhvd/joshix-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/joshix"
+  system: workshop-system-joshix
+  providesApis:
+    - gateway-api-joshix
+  consumesApis:
+    - backend-api-joshix
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-joshix
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/joshix"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-joshix
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://joshix-poi-gateway-app-joshix.apps.rosa916.9nln.p1.openshiftapps.com/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/rosa916-rvhvd/joshix-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/joshix"
+  system: workshop-system-joshix
+  definition:
+    $text: https://github.com/rosa916-rvhvd/joshix-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
